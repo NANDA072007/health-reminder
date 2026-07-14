@@ -63,16 +63,16 @@ export default function FamilyMonitoring() {
   const getBorderColor = (state: string) => {
     switch (state) {
       case 'danger':
-        return 'border-brand-rose/40 hover:border-brand-rose shadow-brand-rose/5 hover:shadow-brand-rose/15';
+        return 'border-brand-rose/40 dark:border-brand-rose/20 hover:border-brand-rose shadow-brand-rose/5 hover:shadow-brand-rose/15';
       case 'warning':
-        return 'border-brand-amber/40 hover:border-brand-amber shadow-brand-amber/5 hover:shadow-brand-amber/10';
+        return 'border-brand-amber/40 dark:border-brand-amber/20 hover:border-brand-amber shadow-brand-amber/5 hover:shadow-brand-amber/10';
       default:
-        return 'border-slate-200/60 hover:border-slate-300 shadow-slate-200/5 hover:shadow-slate-200/20';
+        return 'border-slate-200/60 dark:border-white/10 hover:border-slate-300 dark:hover:border-brand-emerald/30 shadow-slate-200/5 hover:shadow-brand-emerald/5';
     }
   };
 
   return (
-    <section id="family" className="py-24 bg-slate-50/60 relative overflow-hidden">
+    <section id="family" className="py-24 bg-slate-50/30 dark:bg-[#070b14] relative overflow-hidden transition-colors duration-300">
       {/* Decorative gradient blur */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-brand-emerald/5 filter blur-3xl z-0 pointer-events-none" />
 
@@ -83,10 +83,10 @@ export default function FamilyMonitoring() {
           <span className="font-sans font-semibold text-xs text-brand-emerald tracking-widest uppercase block mb-3">
             Family Guardian
           </span>
-          <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark mb-4">
+          <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark dark:text-white mb-4">
             Protect your family circles, remotely.
           </h2>
-          <p className="font-sans text-slate-600">
+          <p className="font-sans text-slate-600 dark:text-slate-300">
             A single, comprehensive panel to watch over children or aging parents. Receive instant clinical alerts when prescriptions are skipped or critical biometric values are exceeded.
           </p>
         </div>
@@ -105,14 +105,18 @@ export default function FamilyMonitoring() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className={`group p-6 rounded-3xl bg-white border shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden ${getBorderColor(member.alertState)}`}
+                whileHover={{ y: -6, scale: 1.015 }}
+                className={`group p-6 rounded-3xl bg-white/70 dark:bg-[#0b1324]/40 backdrop-blur-md border shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden ${getBorderColor(member.alertState)}`}
               >
                 {/* Danger Pulsing Ray Background */}
                 {isDanger && (
-                  <div className="absolute inset-x-0 top-0 h-1.5 bg-brand-rose animate-pulse-slow" />
+                  <div className="absolute inset-x-0 top-0 h-1.5 bg-brand-rose animate-pulse" />
                 )}
 
-                <div>
+                {/* Inner glass highlight */}
+                <div className="absolute inset-[1px] rounded-[23px] border border-white/20 dark:border-white/5 pointer-events-none" />
+
+                <div className="relative z-10">
                   {/* Top Bar: Profile Pic & Score */}
                   <div className="flex items-center justify-between gap-4 mb-5">
                     <div className="relative">
@@ -120,10 +124,10 @@ export default function FamilyMonitoring() {
                         src={member.avatarUrl}
                         alt={member.name}
                         referrerPolicy="no-referrer"
-                        className="w-14 h-14 rounded-2xl object-cover border-2 border-white shadow-md relative z-10"
+                        className="w-14 h-14 rounded-2xl object-cover border-2 border-white dark:border-slate-800 shadow-md relative z-10"
                       />
                       {/* Interactive alert status ring */}
-                      <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white z-20 flex items-center justify-center ${
+                      <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-800 z-20 flex items-center justify-center ${
                         member.alertState === 'danger'
                           ? 'bg-brand-rose'
                           : member.alertState === 'warning'
@@ -140,7 +144,7 @@ export default function FamilyMonitoring() {
                         member.healthScore >= 95
                           ? 'text-brand-emerald'
                           : member.healthScore >= 85
-                          ? 'text-slate-800'
+                          ? 'text-slate-800 dark:text-slate-200'
                           : 'text-brand-rose'
                       }`}>
                         {member.healthScore}%
@@ -150,26 +154,26 @@ export default function FamilyMonitoring() {
 
                   {/* Identity */}
                   <div className="mb-4">
-                    <h3 className="font-display font-extrabold text-base text-brand-dark leading-tight">
+                    <h3 className="font-display font-extrabold text-base text-brand-dark dark:text-white leading-tight">
                       {member.name}
                     </h3>
-                    <span className="font-sans text-xs text-slate-500 font-semibold">{member.relationship}</span>
+                    <span className="font-sans text-xs text-slate-500 dark:text-slate-400 font-semibold">{member.relationship}</span>
                   </div>
 
                   {/* Status Box */}
                   <div className="mb-5 flex flex-col gap-2">
                     {getAlertBadge(member.alertState, member.medicationStatus)}
-                    <p className={`font-sans text-xs leading-normal font-semibold ${isDanger ? 'text-brand-rose' : 'text-slate-600'}`}>
+                    <p className={`font-sans text-xs leading-normal font-semibold ${isDanger ? 'text-brand-rose' : 'text-slate-600 dark:text-slate-300'}`}>
                       {member.medicationStatus}
                     </p>
                   </div>
 
                   {/* Active Vitals Feed inside family member card */}
-                  <div className="space-y-2 pt-4 border-t border-slate-100 mb-6">
+                  <div className="space-y-2 pt-4 border-t border-slate-100 dark:border-white/5 mb-6">
                     <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase block">Prescription Feed</span>
                     {member.activeReminders.map((rem, idx) => (
-                      <div key={idx} className="flex items-center gap-1.5 text-[10px] text-slate-500 font-sans">
-                        <Activity className="w-3.5 h-3.5 text-slate-400" />
+                      <div key={idx} className="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-sans">
+                        <Activity className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         <span className="truncate">{rem}</span>
                       </div>
                     ))}
@@ -182,12 +186,12 @@ export default function FamilyMonitoring() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleNudge(member.id, member.name)}
                   disabled={isNudged}
-                  className={`w-full py-3 rounded-2xl font-sans font-bold text-xs flex items-center justify-center gap-1.5 border transition-all ${
+                  className={`w-full py-3 rounded-2xl font-sans font-bold text-xs flex items-center justify-center gap-1.5 border transition-all cursor-pointer relative z-10 ${
                     isNudged
-                      ? 'bg-slate-900 text-white border-slate-900'
+                      ? 'bg-slate-900 dark:bg-brand-emerald text-white dark:text-slate-950 border-slate-900 dark:border-brand-emerald font-extrabold'
                       : isDanger
                       ? 'bg-brand-rose/10 hover:bg-brand-rose hover:text-white text-brand-rose border-brand-rose/20 hover:border-brand-rose'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                      : 'bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10'
                   }`}
                 >
                   <PhoneCall className={`w-3.5 h-3.5 ${isNudged ? 'animate-bounce' : ''}`} />
@@ -199,8 +203,8 @@ export default function FamilyMonitoring() {
                 </motion.button>
 
                 {/* Subtle time details */}
-                <div className="mt-3 text-center">
-                  <span className="text-[9px] text-slate-400 font-mono">Last activity checked: {member.lastActive}</span>
+                <div className="mt-3 text-center relative z-10">
+                  <span className="text-[9px] text-slate-400 dark:text-slate-500 font-mono">Last activity checked: {member.lastActive}</span>
                 </div>
               </motion.div>
             );

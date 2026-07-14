@@ -59,18 +59,18 @@ export default function Reports() {
       case 1:
         return 'bg-brand-rose/40 border-brand-rose/15 hover:shadow-brand-rose/10 hover:scale-105'; // Missed multiple
       case 0:
-        return 'bg-slate-100 border-slate-200 hover:bg-slate-200 hover:scale-105'; // Missed all
+        return 'bg-slate-100 dark:bg-slate-900 border-slate-200/40 dark:border-white/5 hover:bg-slate-200 dark:hover:bg-slate-800 hover:scale-105'; // Missed all
       default:
-        return 'bg-slate-100 border-slate-200';
+        return 'bg-slate-100 dark:bg-slate-900 border-slate-200/40 dark:border-white/5';
     }
   };
 
   const summary = getAdherenceSummary();
 
   return (
-    <section id="reports" className="py-24 bg-white relative overflow-hidden">
+    <section id="reports" className="py-24 bg-slate-50/20 dark:bg-[#070b14] relative overflow-hidden transition-colors duration-300">
       {/* Decorative background border-line divider */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-white/10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -80,24 +80,24 @@ export default function Reports() {
             <span className="font-sans font-semibold text-xs text-brand-emerald tracking-widest uppercase block mb-3">
               Clinical Export
             </span>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark mb-4">
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark dark:text-white mb-4">
               Structured clinical health summaries.
             </h2>
-            <p className="font-sans text-slate-600">
+            <p className="font-sans text-slate-600 dark:text-slate-300">
               Transform biometric streams into structured, professional clinical reports. Downloadable as HIPAA-compliant files to share directly with your care providers.
             </p>
           </div>
 
           {/* Premium Selector Button Pill */}
-          <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80 self-start md:self-end">
+          <div className="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-white/5 self-start md:self-end">
             {(['weekly', 'monthly', 'yearly'] as ReportTab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-5 py-2 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
                   activeTab === tab
-                    ? 'bg-white text-brand-dark shadow-md'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-white dark:bg-slate-850 text-brand-dark dark:text-white shadow-md'
+                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 {tab}
@@ -115,22 +115,26 @@ export default function Reports() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="lg:col-span-8 rounded-3xl glass-card border border-slate-200/60 p-6 sm:p-8 shadow-xl flex flex-col justify-between"
+            className="lg:col-span-8 rounded-3xl bg-white/70 dark:bg-[#0b1324]/40 backdrop-blur-md border border-slate-200/50 dark:border-white/10 p-6 sm:p-8 shadow-xl flex flex-col justify-between relative overflow-hidden"
           >
-            <div className="flex items-center justify-between mb-6">
+            {/* Gloss reflection overlay */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="absolute inset-[1px] rounded-[23px] border border-white/20 dark:border-white/5 pointer-events-none" />
+
+            <div className="flex items-center justify-between mb-6 relative z-10">
               <div>
                 <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase block mb-0.5">COMPLIANCE SPLIT</span>
-                <h3 className="font-display font-bold text-base text-brand-dark">Adherence: Completed vs Missed</h3>
+                <h3 className="font-display font-bold text-base text-brand-dark dark:text-white">Adherence: Completed vs Missed</h3>
               </div>
               
               <div className="flex gap-4 text-xs font-semibold">
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-3 rounded bg-brand-emerald" />
-                  <span className="text-slate-600">Taken</span>
+                  <span className="text-slate-600 dark:text-slate-300">Taken</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-3 rounded bg-brand-rose" />
-                  <span className="text-slate-600">Missed</span>
+                  <span className="text-slate-600 dark:text-slate-300">Missed</span>
                 </div>
               </div>
             </div>
@@ -166,15 +170,15 @@ export default function Reports() {
               </ResponsiveContainer>
             </div>
             
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-4">
+            <div className="pt-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between mt-4 relative z-10">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-brand-emerald animate-pulse-slow" />
-                <span className="text-xs text-slate-500 font-semibold leading-relaxed">
+                <TrendingUp className="w-4 h-4 text-brand-emerald animate-pulse" />
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
                   Compliance is up by <span className="text-brand-emerald font-bold">2.4%</span> this period.
                 </span>
               </div>
               
-              <button className="text-xs font-bold text-brand-dark hover:text-brand-emerald flex items-center gap-1.5 transition-colors group">
+              <button className="text-xs font-bold text-brand-dark dark:text-white hover:text-brand-emerald flex items-center gap-1.5 transition-colors group cursor-pointer">
                 Export HIPAA PDF
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </button>
@@ -190,16 +194,17 @@ export default function Reports() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
-              className="rounded-3xl glass-card border border-slate-200/60 p-6 shadow-lg flex items-center justify-between"
+              className="rounded-3xl bg-white/70 dark:bg-[#0b1324]/40 backdrop-blur-md border border-slate-200/50 dark:border-white/10 p-6 shadow-lg flex items-center justify-between relative overflow-hidden"
             >
-              <div className="min-w-0 flex-1">
+              <div className="absolute inset-[1px] rounded-[23px] border border-white/25 dark:border-white/5 pointer-events-none" />
+              <div className="min-w-0 flex-1 relative z-10">
                 <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase block mb-1">AGGREGATE RATING</span>
-                <h4 className="font-display font-extrabold text-2xl text-brand-dark mb-1">{summary.percent}%</h4>
+                <h4 className="font-display font-extrabold text-2xl text-brand-dark dark:text-white mb-1">{summary.percent}%</h4>
                 <p className="font-display font-bold text-xs text-brand-emerald mb-2">{summary.label}</p>
-                <p className="font-sans text-[11px] text-slate-500 leading-normal truncate">{summary.comment}</p>
+                <p className="font-sans text-[11px] text-slate-500 dark:text-slate-400 leading-normal truncate">{summary.comment}</p>
               </div>
 
-              <div className="relative w-18 h-18 shrink-0 bg-brand-emerald/10 border border-brand-emerald/20 rounded-2xl flex items-center justify-center">
+              <div className="relative w-18 h-18 shrink-0 bg-brand-emerald/10 border border-brand-emerald/20 rounded-2xl flex items-center justify-center z-10">
                 <Award className="w-9 h-9 text-brand-emerald" />
               </div>
             </motion.div>
@@ -210,13 +215,14 @@ export default function Reports() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-              className="rounded-3xl glass-card border border-slate-200/60 p-6 shadow-lg flex-1 flex flex-col justify-between"
+              className="rounded-3xl bg-white/70 dark:bg-[#0b1324]/40 backdrop-blur-md border border-slate-200/50 dark:border-white/10 p-6 shadow-lg flex-1 flex flex-col justify-between relative overflow-hidden"
             >
-              <div>
+              <div className="absolute inset-[1px] rounded-[23px] border border-white/25 dark:border-white/5 pointer-events-none" />
+              <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase block mb-0.5">COMPLIANCE HEATMAP</span>
-                    <h4 className="font-display font-bold text-sm text-brand-dark">Daily Streak Calendar</h4>
+                    <h4 className="font-display font-bold text-sm text-brand-dark dark:text-white">Daily Streak Calendar</h4>
                   </div>
                   <Calendar className="w-4 h-4 text-slate-400" />
                 </div>
@@ -234,12 +240,12 @@ export default function Reports() {
                 </div>
 
                 {/* Heatmap Legend */}
-                <div className="flex justify-between items-center text-[9px] text-slate-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-100">
+                <div className="flex justify-between items-center text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider pt-2 border-t border-slate-100 dark:border-white/5">
                   <span>Missed All</span>
                   <div className="flex gap-1">
-                    <span className="w-2.5 h-2.5 rounded bg-slate-100 border border-slate-200" />
-                    <span className="w-2.5 h-2.5 rounded bg-emerald-200 border border-emerald-300" />
-                    <span className="w-2.5 h-2.5 rounded bg-emerald-400 border border-emerald-500" />
+                    <span className="w-2.5 h-2.5 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5" />
+                    <span className="w-2.5 h-2.5 rounded bg-emerald-200 dark:bg-emerald-800 border border-emerald-300 dark:border-emerald-700/30" />
+                    <span className="w-2.5 h-2.5 rounded bg-emerald-400 dark:bg-emerald-600 border border-emerald-500 dark:border-emerald-500/30" />
                     <span className="w-2.5 h-2.5 rounded bg-brand-emerald border border-emerald-600" />
                   </div>
                   <span>Perfect</span>
@@ -247,8 +253,8 @@ export default function Reports() {
               </div>
 
               {/* Tooltip display */}
-              <div className="mt-4 h-8 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-200/40 px-3">
-                <p className="font-mono text-[10px] text-slate-600 text-center truncate">
+              <div className="mt-4 h-8 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-white/5 px-3 relative z-10">
+                <p className="font-mono text-[10px] text-slate-600 dark:text-slate-300 text-center truncate">
                   {hoveredDay ? (
                     <span className="font-semibold">{hoveredDay.tooltip}</span>
                   ) : (

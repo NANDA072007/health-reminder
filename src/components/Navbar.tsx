@@ -11,6 +11,7 @@ interface NavbarProps {
 export default function Navbar({ onTryDemoClick, theme, onThemeToggle }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +23,37 @@ export default function Navbar({ onTryDemoClick, theme, onThemeToggle }: NavbarP
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = ['hero', 'features', 'assistant', 'demo', 'family', 'pricing', 'faq'];
+    const observerOptions = {
+      root: null,
+      rootMargin: '-40% 0px -50% 0px',
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.unobserve(el);
+      });
+    };
   }, []);
 
   const navLinks = [
@@ -36,13 +68,17 @@ export default function Navbar({ onTryDemoClick, theme, onThemeToggle }: NavbarP
   return (
     <nav
       id="navbar"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'py-3 bg-white/70 dark:bg-[#090d16]/70 backdrop-blur-md border-b border-white/40 dark:border-white/5 shadow-sm'
-          : 'py-5 bg-transparent border-b border-transparent'
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 flex justify-center ${
+        isScrolled ? 'top-4 px-4 sm:px-6' : 'top-0 px-0'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div
+        className={`w-full transition-all duration-300 relative ${
+          isScrolled
+            ? 'max-w-5xl bg-white/80 dark:bg-[#090d16]/80 backdrop-blur-xl border border-slate-200/50 dark:border-white/10 rounded-2xl py-2 px-6 shadow-lg shadow-slate-900/5'
+            : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 border-b border-transparent'
+        }`}
+      >
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
@@ -55,17 +91,30 @@ export default function Navbar({ onTryDemoClick, theme, onThemeToggle }: NavbarP
           </a>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="font-sans font-medium text-sm text-slate-600 dark:text-slate-300 hover:text-brand-dark dark:hover:text-white transition-colors duration-200 relative group py-2"
-              >
-                {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-emerald transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
+          <div className="hidden md:flex items-center gap-6 relative">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.slice(1);
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className={`font-sans font-medium text-xs transition-colors duration-200 relative py-2 px-1 ${
+                    isActive
+                      ? 'text-brand-dark dark:text-white font-semibold'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-brand-dark dark:hover:text-white'
+                  }`}
+                >
+                  {link.name}
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeUnderline"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-emerald rounded-full"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </a>
+              );
+            })}
           </div>
 
           {/* CTA & Theme Toggle Buttons */}
@@ -95,7 +144,7 @@ export default function Navbar({ onTryDemoClick, theme, onThemeToggle }: NavbarP
 
             <button
               onClick={onTryDemoClick}
-              className="font-sans font-semibold text-sm text-brand-emerald hover:text-brand-emerald/80 transition-colors duration-200 px-4 py-2"
+              className="font-sans font-semibold text-xs text-brand-emerald hover:text-brand-emerald/80 transition-colors duration-200 px-4 py-2"
             >
               Learn More
             </button>
@@ -103,7 +152,7 @@ export default function Navbar({ onTryDemoClick, theme, onThemeToggle }: NavbarP
               onClick={onTryDemoClick}
               whileHover={{ scale: 1.03, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              className="font-sans font-semibold text-sm text-white bg-brand-emerald hover:bg-brand-emerald/90 transition-all duration-200 px-5 py-2.5 rounded-xl shadow-lg shadow-brand-emerald/15 hover:shadow-brand-emerald/25 flex items-center gap-1.5"
+              className="font-sans font-semibold text-xs text-white bg-brand-emerald hover:bg-brand-emerald/90 transition-all duration-200 px-5 py-2.5 rounded-xl shadow-lg shadow-brand-emerald/15 hover:shadow-brand-emerald/25 flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-white" />
               Try Demo

@@ -35,6 +35,7 @@ export default function DashboardPreview({ theme = 'light' }: DashboardPreviewPr
   const waterTarget = 2500; // ml
   const [steps, setSteps] = useState(6742);
   const stepTarget = 10000;
+  const [bloodPressure, setBloodPressure] = useState({ systolic: 119, diastolic: 77 });
   
   // Custom Live Simulations
   const [heartRate, setHeartRate] = useState(72);
@@ -170,6 +171,7 @@ export default function DashboardPreview({ theme = 'light' }: DashboardPreviewPr
     setReminders(dashboardReminders);
     setWaterIntake(1250);
     setSteps(6742);
+    setBloodPressure({ systolic: 119, diastolic: 77 });
     setHighlightedId(null);
     setToast(null);
     setLastUpdated(Date.now());
@@ -542,16 +544,18 @@ export default function DashboardPreview({ theme = 'light' }: DashboardPreviewPr
                 <div className="relative w-18 h-18 shrink-0">
                   <svg className="w-full h-full transform -rotate-95" viewBox="0 0 80 80">
                     <circle className="stroke-slate-100 dark:stroke-slate-800" fill="none" strokeWidth={6} cx={40} cy={40} r={radius} />
-                    <circle
-                      className="stroke-brand-sky transition-all duration-500 ease-out"
+                    <motion.circle
+                      className="stroke-brand-sky"
                       fill="none"
                       strokeWidth={6}
                       strokeLinecap="round"
                       cx={40}
                       cy={40}
                       r={radius}
+                      initial={{ strokeDashoffset: strokeCircumference }}
+                      animate={{ strokeDashoffset: strokeDashoffset }}
+                      transition={{ type: 'spring', stiffness: 80, damping: 15 }}
                       strokeDasharray={strokeCircumference}
-                      strokeDashoffset={strokeDashoffset}
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -600,9 +604,11 @@ export default function DashboardPreview({ theme = 'light' }: DashboardPreviewPr
                 
                 {/* Progress bar */}
                 <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-4">
-                  <div
-                    className="h-full bg-orange-500 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min((steps / stepTarget) * 100, 100)}%` }}
+                  <motion.div
+                    className="h-full bg-orange-500 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min((steps / stepTarget) * 100, 100)}%` }}
+                    transition={{ type: 'spring', stiffness: 80, damping: 15 }}
                   />
                 </div>
               </div>
@@ -643,10 +649,40 @@ export default function DashboardPreview({ theme = 'light' }: DashboardPreviewPr
                     <div className="w-px h-8 bg-slate-200 dark:bg-white/10" />
                     <div>
                       <p className="font-display font-extrabold text-2xl text-brand-dark dark:text-white flex items-baseline gap-1">
-                        119/77 <span className="text-[10px] font-normal text-slate-400 dark:text-slate-500">mmHg</span>
+                        {bloodPressure.systolic}/{bloodPressure.diastolic} <span className="text-[10px] font-normal text-slate-400 dark:text-slate-500">mmHg</span>
                       </p>
                       <span className="text-[9px] text-slate-400 dark:text-slate-500 block font-semibold uppercase tracking-wider">Blood Pressure</span>
                     </div>
+                  </div>
+
+                  {/* Interactive Inline BP Log Field */}
+                  <div className="flex gap-1.5 items-center mt-3">
+                    <input
+                      type="text"
+                      placeholder="e.g. 120/80"
+                      className="w-20 px-2 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg text-xs font-mono font-bold text-center text-brand-dark dark:text-white focus:outline-none focus:border-brand-rose transition-all placeholder-slate-400"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const val = (e.target as HTMLInputElement).value;
+                          const parts = val.split('/');
+                          if (parts.length === 2) {
+                            const sys = parseInt(parts[0]);
+                            const dia = parseInt(parts[1]);
+                            if (!isNaN(sys) && !isNaN(dia)) {
+                              setBloodPressure({ systolic: sys, diastolic: dia });
+                              showToast(`Logged Blood Pressure: ${sys}/${dia} mmHg`);
+                              (e.target as HTMLInputElement).value = '';
+                              triggerUpdate();
+                            } else {
+                              showToast("Please enter valid numbers like 120/80");
+                            }
+                          } else {
+                            showToast("Use format systolic/diastolic (e.g. 120/80)");
+                          }
+                        }
+                      }}
+                    />
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500 font-sans">Press Enter to Log BP</span>
                   </div>
                 </div>
                 {/* Visual pulse speed bound to heartRate state */}
@@ -663,14 +699,35 @@ export default function DashboardPreview({ theme = 'light' }: DashboardPreviewPr
                 </motion.div>
               </div>
 
+              {/* Dynamic Status Badges based on actual Systolic/Diastolic readings */}
               <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center gap-4 text-[10px] text-slate-500 dark:text-slate-400 font-sans relative z-10">
                 <div className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald" />
                   <span>Sinus Rhythm Normal</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald" />
-                  <span>Stage 0 (Healthy)</span>
+                  {(() => {
+                    const sys = bloodPressure.systolic;
+                    const dia = bloodPressure.diastolic;
+                    let text = 'Normal';
+                    let color = 'bg-brand-emerald';
+                    if (sys >= 140 || dia >= 90) {
+                      text = 'Stage 2';
+                      color = 'bg-brand-rose animate-pulse';
+                    } else if (sys >= 130 || dia >= 80) {
+                      text = 'Stage 1';
+                      color = 'bg-brand-purple animate-pulse';
+                    } else if (sys >= 120) {
+                      text = 'Elevated';
+                      color = 'bg-brand-amber animate-pulse';
+                    }
+                    return (
+                      <>
+                        <span className={`w-1.5 h-1.5 rounded-full ${color}`} />
+                        <span>{text}</span>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
             </motion.div>

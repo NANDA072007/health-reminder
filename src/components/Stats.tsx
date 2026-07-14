@@ -86,9 +86,9 @@ export default function Stats() {
   };
 
   return (
-    <section id="stats" className="py-20 bg-white relative overflow-hidden">
+    <section id="stats" className="py-20 bg-slate-50/30 dark:bg-[#070b14] relative overflow-hidden transition-colors duration-300">
       {/* Decorative high-end divider element */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-white/10" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -97,7 +97,7 @@ export default function Stats() {
           <span className="font-sans font-semibold text-xs text-brand-emerald tracking-widest uppercase block mb-3">
             Proven Outcomes
           </span>
-          <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark">
+          <h2 className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark dark:text-white">
             Adherence metrics built on certified clinical guidelines.
           </h2>
         </div>
@@ -111,15 +111,19 @@ export default function Stats() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.5, delay: idx * 0.1, ease: 'easeOut' }}
-              whileHover={{ y: -6 }}
-              className="group p-8 rounded-3xl glass-card border shadow-sm hover:shadow-xl hover:border-slate-300/60 transition-all duration-300 flex flex-col justify-between"
+              whileHover={{ y: -6, scale: 1.02 }}
+              className="group p-8 rounded-3xl bg-white/70 dark:bg-[#0b1324]/40 backdrop-blur-md border border-slate-200/50 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-brand-emerald/30 dark:hover:border-brand-emerald/30 hover:shadow-brand-emerald/5 transition-all duration-300 flex flex-col justify-between relative overflow-hidden"
             >
-              <div>
+              {/* Card shimmer sheen effect */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="absolute inset-[1px] rounded-[23px] border border-white/20 dark:border-white/5 pointer-events-none" />
+
+              <div className="relative z-10">
                 {/* Metirc Icon */}
                 {getIcon(stat.id)}
 
                 {/* Animated counter display */}
-                <div className="flex items-baseline mb-2">
+                <div className="flex items-baseline mb-2 text-brand-dark dark:text-white">
                   <AnimatedCounter
                     value={stat.value}
                     prefix={stat.prefix}
@@ -128,13 +132,13 @@ export default function Stats() {
                 </div>
 
                 {/* Metric Label */}
-                <h3 className="font-display font-bold text-base text-slate-800 mb-3 group-hover:text-brand-dark transition-colors">
+                <h3 className="font-display font-bold text-base text-slate-800 dark:text-slate-200 mb-3 group-hover:text-brand-emerald dark:group-hover:text-brand-emerald transition-colors">
                   {stat.label}
                 </h3>
               </div>
 
               {/* Description copy with high-contrast balance */}
-              <p className="font-sans text-xs text-slate-500 leading-relaxed mt-auto">
+              <p className="font-sans text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-auto relative z-10">
                 {stat.description}
               </p>
             </motion.div>

@@ -38,7 +38,7 @@ export default function Features() {
   };
 
   return (
-    <section id="features" className="py-24 bg-white relative overflow-hidden">
+    <section id="features" className="py-24 bg-slate-50/20 dark:bg-[#070b14] relative overflow-hidden transition-colors duration-300">
       {/* Decorative top grid lines for tech-forward feel */}
       <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(to_bottom,rgba(16,185,129,0.05)_1px,transparent_1px)] bg-[size:100%_8px] pointer-events-none" />
 
@@ -61,7 +61,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark mb-4"
+            className="font-display font-extrabold text-3xl sm:text-4xl tracking-tight text-brand-dark dark:text-white mb-4"
           >
             Fully integrated clinical-grade features.
           </motion.h2>
@@ -71,7 +71,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="font-sans text-slate-600"
+            className="font-sans text-slate-600 dark:text-slate-300"
           >
             No secondary architectures, no gaps. Each modular component works continuously behind the scenes to protect your wellbeing.
           </motion.p>
@@ -87,35 +87,39 @@ export default function Features() {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.5, delay: idx * 0.08, ease: 'easeOut' }}
               whileHover={{ y: -6, scale: 1.02 }}
-              className="group p-6 rounded-3xl glass-card border shadow-sm hover:shadow-xl hover:border-slate-300/60 transition-all duration-300 flex flex-col justify-between h-full"
+              className="group p-6 rounded-3xl bg-white/70 dark:bg-[#0b1324]/40 backdrop-blur-md border border-slate-200/50 dark:border-white/10 shadow-sm hover:shadow-xl hover:border-brand-emerald/20 dark:hover:border-brand-emerald/20 hover:shadow-brand-emerald/5 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden"
             >
-              <div>
+              {/* Card shimmer sheen effect */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="absolute inset-[1px] rounded-[23px] border border-white/20 dark:border-white/5 pointer-events-none" />
+
+              <div className="relative z-10">
                 {/* Header inside Card */}
                 <div className="flex items-center justify-between mb-5">
-                  <div className={`p-3 rounded-2xl bg-gradient-to-tr ${feat.gradientFrom} ${feat.gradientTo} border border-slate-200/40 shrink-0`}>
+                  <div className={`p-3 rounded-2xl bg-gradient-to-tr ${feat.gradientFrom} ${feat.gradientTo} border border-slate-200/40 dark:border-white/5 shrink-0`}>
                     {getIcon(feat.iconName)}
                   </div>
                   
                   {/* Dynamic Badge */}
                   {feat.badge && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-brand-emerald/15 text-brand-emerald">
+                    <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-brand-emerald/15 text-brand-emerald dark:bg-brand-emerald/20">
                       {feat.badge}
                     </span>
                   )}
                 </div>
 
                 {/* Content */}
-                <h3 className="font-display font-bold text-base text-brand-dark mb-2.5">
+                <h3 className="font-display font-bold text-base text-brand-dark dark:text-white mb-2.5">
                   {feat.title}
                 </h3>
                 
-                <p className="font-sans text-xs text-slate-500 leading-relaxed">
+                <p className="font-sans text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                   {feat.description}
                 </p>
               </div>
 
               {/* High-end subtle indicator */}
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-[10px] font-bold text-brand-emerald opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5 flex items-center gap-1.5 text-[10px] font-bold text-brand-emerald dark:text-brand-emerald opacity-0 group-hover:opacity-100 transition-all duration-300 relative z-10">
                 <span>Learn how it works</span>
                 <span>→</span>
               </div>
